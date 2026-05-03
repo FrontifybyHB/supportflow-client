@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { formatDistanceToNow } from "@/shared/utils/date";
+import { formatDistanceToNow } from "date-fns";
 import type { Ticket } from "../types/ticket.types";
 
 interface TicketRowProps {
