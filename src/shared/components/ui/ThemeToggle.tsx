@@ -1,33 +1,23 @@
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { Button } from "@/shared/components/ui/Button";
+import { cn } from "@/shared/utils/cn";
+import { useTheme } from "./theme";
 
-type Theme = "dark" | "light";
-
-function getInitialTheme(): Theme {
-  const storedTheme = window.localStorage.getItem("supportflow-theme");
-  return storedTheme === "light" ? "light" : "dark";
-}
-
-export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem("supportflow-theme", theme);
-  }, [theme]);
-
-  const nextTheme = theme === "dark" ? "light" : "dark";
+export function ThemeToggle({ className }: { className?: string }) {
+  const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
 
   return (
-    <Button
-      aria-label={`Switch to ${nextTheme} theme`}
-      className="h-9 w-9 p-0"
-      onClick={() => setTheme(nextTheme)}
-      title={`Switch to ${nextTheme} theme`}
-      variant="ghost"
+    <button
+      type="button"
+      onClick={toggleTheme}
+      className={cn(
+        "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]/30",
+        className,
+      )}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
-      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-    </Button>
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
   );
 }

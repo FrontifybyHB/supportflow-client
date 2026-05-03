@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LogOut, Menu, Search, LayoutDashboard, Ticket, MessageSquare, BookOpen, Users, BarChart2, Settings, X, Bolt } from "lucide-react";
+import { LogOut, Menu, Search, LayoutDashboard, Ticket, MessageSquare, BookOpen, Users, BarChart2, Settings, X, Bolt, Building2 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/components/ui/Button";
@@ -9,14 +9,23 @@ import { useAuth } from "@/features/auth/hooks/useAuth";
 import type { User as AuthUser } from "@/features/auth/types/auth.types";
 import { cn } from "@/shared/utils/cn";
 
-const NAV_LINKS = [
-  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-  { name: "Tickets", path: "/tickets", icon: Ticket },
-  { name: "Conversations", path: "/conversations", icon: MessageSquare },
-  { name: "Knowledge Base", path: "/knowledge", icon: BookOpen },
-  { name: "Agents", path: "/agents", icon: Users },
-  { name: "Analytics", path: "/analytics", icon: BarChart2 },
-  { name: "Settings", path: "/settings", icon: Settings },
+type NavLinkConfig = {
+  name: string;
+  path: string;
+  icon: typeof LayoutDashboard;
+  roles: AuthUser["role"][];
+};
+
+const NAV_LINKS: NavLinkConfig[] = [
+  { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard, roles: ["admin", "superadmin"] },
+  { name: "Businesses", path: "/businesses", icon: Building2, roles: ["superadmin"] },
+  { name: "Tickets", path: "/tickets", icon: Ticket, roles: ["admin", "agent", "superadmin"] },
+  { name: "Conversations", path: "/conversations", icon: MessageSquare, roles: ["admin", "agent", "superadmin"] },
+  { name: "Knowledge Base", path: "/knowledge", icon: BookOpen, roles: ["admin"] },
+  { name: "Agents", path: "/agents", icon: Users, roles: ["admin", "superadmin"] },
+  { name: "Analytics", path: "/analytics", icon: BarChart2, roles: ["admin", "superadmin"] },
+  { name: "Workspace Settings", path: "/workspace-settings", icon: Settings, roles: ["admin"] },
+  { name: "Platform Settings", path: "/settings", icon: Settings, roles: ["superadmin"] },
 ];
 
 function NavContent({ user, onNavigate }: { user: AuthUser | null; onNavigate?: () => void }) {
@@ -32,7 +41,7 @@ function NavContent({ user, onNavigate }: { user: AuthUser | null; onNavigate?: 
       </div>
 
       <nav className="flex-1 space-y-1 px-4 py-4 overflow-y-auto">
-        {NAV_LINKS.map((link) => (
+        {NAV_LINKS.filter((link) => user?.role && link.roles.includes(user.role)).map((link) => (
           <NavLink
             key={link.name}
             to={link.path}

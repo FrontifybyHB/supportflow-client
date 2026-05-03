@@ -1,11 +1,22 @@
-import type { HTMLAttributes } from "react";
+import { ReactNode } from "react";
 import { cn } from "@/shared/utils/cn";
 
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+interface CardProps {
+  children: ReactNode;
+  className?: string;
+  noPadding?: boolean;
+}
+
+export function Card({ children, className, noPadding = false }: CardProps) {
   return (
     <div
-      className={cn("rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-5 shadow-sm", className)}
-      {...props}
-    />
+      className={cn(
+        "bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl shadow-sm overflow-hidden",
+        !noPadding && "p-6",
+        className
+      )}
+    >
+      {children}
+    </div>
   );
 }
