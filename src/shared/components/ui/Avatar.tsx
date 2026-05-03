@@ -1,44 +1,29 @@
-import type { HTMLAttributes } from "react";
 import { cn } from "@/shared/utils/cn";
 
-type AvatarProps = HTMLAttributes<HTMLDivElement> & {
+interface AvatarProps {
+  src?: string;
   initials: string;
+  className?: string;
   size?: "sm" | "md" | "lg";
-  src?: string | null;
-  alt?: string;
-};
+}
 
-const sizeClasses = {
-  sm: "h-8 w-8 text-xs",
-  md: "h-10 w-10 text-sm",
-  lg: "h-12 w-12 text-base",
-};
-
-export function Avatar({ alt, className, initials, size = "md", src, ...props }: AvatarProps) {
-  const label = initials.trim().slice(0, 2).toUpperCase() || "U";
-
-  if (src) {
-    return (
-      <img
-        alt={alt ?? label}
-        className={cn("shrink-0 rounded-full border border-[var(--border-subtle)] object-cover", sizeClasses[size], className)}
-        src={src}
-      />
-    );
-  }
-
+export function Avatar({ src, initials, className, size = "md" }: AvatarProps) {
   return (
     <div
-      aria-label={alt ?? label}
       className={cn(
-        "flex shrink-0 items-center justify-center rounded-full bg-[var(--accent-glow)] font-semibold text-[var(--accent-primary)]",
-        sizeClasses[size],
-        className,
+        "relative flex items-center justify-center rounded-full overflow-hidden shrink-0",
+        "bg-[var(--bg-elevated)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-medium",
+        size === "sm" && "h-8 w-8 text-xs",
+        size === "md" && "h-10 w-10 text-sm",
+        size === "lg" && "h-12 w-12 text-base",
+        className
       )}
-      role="img"
-      {...props}
     >
-      {label}
+      {src ? (
+        <img src={src} alt={initials} className="h-full w-full object-cover" />
+      ) : (
+        <span>{initials}</span>
+      )}
     </div>
   );
 }
