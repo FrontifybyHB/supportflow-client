@@ -1,6 +1,4 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
-import { ACCESS_TOKEN_COOKIE } from "@/lib/api/httpClient";
 import type { AuthSession, User } from "../types/auth.types";
 
 type AuthState = {
@@ -20,15 +18,10 @@ const authSlice = createSlice({
     setSession: (state, action: PayloadAction<AuthSession>) => {
       state.user = action.payload.user;
       state.isAuthenticated = true;
-      Cookies.set(ACCESS_TOKEN_COOKIE, action.payload.accessToken, {
-        expires: 7,
-        sameSite: "strict",
-      });
     },
     clearSession: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      Cookies.remove(ACCESS_TOKEN_COOKIE);
     },
   },
 });

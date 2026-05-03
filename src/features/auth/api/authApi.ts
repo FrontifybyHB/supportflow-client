@@ -6,6 +6,7 @@ export async function login(input: LoginInput): Promise<AuthSession> {
     return {
       accessToken: "dev-token",
       user: {
+        _id: "1",
         id: "1",
         name: "SupportFlow Admin",
         email: input.email,
