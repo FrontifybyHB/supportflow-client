@@ -9,4 +9,16 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "query-vendor": ["@tanstack/react-query"],
+          "motion-vendor": ["framer-motion"],
+          "icons-vendor": ["lucide-react"],
+        },
+      },
+    },
+  },
 });
